@@ -1,0 +1,879 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ナカムラサイクル｜江戸川区鹿骨の自転車屋</title>
+    <!-- Google Fonts: 洗練されたゴシック体を採用 -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;500;700&display=swap" rel="stylesheet">
+    <!-- Phosphor Icons: シンプルなアイコン用 -->
+    <script src="https://unpkg.com/@phosphor-icons/web"></script>
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['"Noto Sans JP"', 'sans-serif'],
+                    },
+                    colors: {
+                        black: '#111111',
+                        grayLight: '#f8f9fa',
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        html { scroll-behavior: smooth; }
+        .hidden-tab { display: none; }
+        details > summary { list-style: none; cursor: pointer; }
+        details > summary::-webkit-details-marker { display: none; }
+        details[open] summary ~ * { animation: fadeIn 0.3s ease-in-out; }
+
+        /* ── ページロード：ヒーローテキスト ── */
+        @keyframes heroFadeUp {
+            from { opacity: 0; transform: translateY(30px); }
+            to   { opacity: 1; transform: translateY(0); }
+        }
+        @keyframes heroFadeIn {
+            from { opacity: 0; }
+            to   { opacity: 1; }
+        }
+        .hero-text    { animation: heroFadeUp 0.9s cubic-bezier(.22,1,.36,1) both; }
+        .hero-text-2  { animation: heroFadeUp 0.9s 0.15s cubic-bezier(.22,1,.36,1) both; }
+        .hero-text-3  { animation: heroFadeUp 0.9s 0.3s cubic-bezier(.22,1,.36,1) both; }
+        .hero-img     { animation: heroFadeIn 1.2s 0.2s ease both; }
+
+        /* ── スクロール：フェードイン ── */
+        .reveal {
+            opacity: 0;
+            transform: translateY(28px);
+            transition: opacity 0.7s ease, transform 0.7s cubic-bezier(.22,1,.36,1);
+        }
+        .reveal.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+        .reveal-delay-1 { transition-delay: 0.1s; }
+        .reveal-delay-2 { transition-delay: 0.2s; }
+        .reveal-delay-3 { transition-delay: 0.3s; }
+
+        /* ── カードホバー：浮き上がり ── */
+        .card-lift {
+            transition: transform 0.3s cubic-bezier(.22,1,.36,1), box-shadow 0.3s ease;
+        }
+        .card-lift:hover {
+            transform: translateY(-6px);
+            box-shadow: 0 16px 40px rgba(0,0,0,0.10);
+        }
+
+        /* ── サービスアイコン：スケール ── */
+        .icon-pop {
+            transition: transform 0.3s cubic-bezier(.22,1,.36,1);
+        }
+        .icon-pop:hover { transform: scale(1.15); }
+
+        /* ── ヘッダーライン ── */
+        .nav-underline {
+            position: relative;
+        }
+        .nav-underline::after {
+            content: '';
+            position: absolute;
+            bottom: -2px; left: 0;
+            width: 0; height: 1px;
+            background: #111;
+            transition: width 0.3s ease;
+        }
+        .nav-underline:hover::after { width: 100%; }
+
+        /* ── Ken Burns ── */
+        @keyframes kenburns {
+            0%   { transform: scale(1)    translate(0, 0); }
+            100% { transform: scale(1.08) translate(-1%, -1%); }
+        }
+        .kenburns-img {
+            animation: kenburns 12s ease-in-out infinite alternate;
+            transform-origin: center center;
+        }
+
+        /* ── ヒーロースライドショー ── */
+        .hero-slide {
+            position: absolute; inset: 0;
+            width: 100%; height: 100%;
+            object-fit: cover;
+            opacity: 0;
+            transition: opacity 1.2s ease-in-out;
+            animation: kenburns 12s ease-in-out infinite alternate;
+            transform-origin: center center;
+        }
+        .hero-slide.active { opacity: 1; }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(-10px); }
+            to   { opacity: 1; transform: translateY(0); }
+        }
+    </style>
+</head>
+<body class="font-sans text-black antialiased bg-white">
+
+    <!-- Header -->
+    <header class="bg-white sticky top-0 z-50 border-b border-gray-200">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between items-center h-20">
+                <div class="flex-shrink-0 flex items-center">
+                    <a href="#">
+                        <img src="logo.svg" alt="ナカムラサイクル" class="h-14 w-auto object-contain">
+                    </a>
+                </div>
+                <nav class="hidden md:flex space-x-8 items-center text-sm font-medium tracking-wider">
+                    <a href="#lineup" class="nav-underline hover:text-gray-500 transition">おすすめ自転車</a>
+                    <a href="#service" class="nav-underline hover:text-gray-500 transition">修理・サポート</a>
+                    <a href="#knowledge" class="nav-underline hover:text-gray-500 transition">メンテナンス知識</a>
+                    <a href="#news" class="nav-underline hover:text-gray-500 transition">お知らせ</a>
+                    <a href="#qa" class="nav-underline hover:text-gray-500 transition">Q&A</a>
+                    <a href="#access" class="nav-underline hover:text-gray-500 transition">アクセス・カレンダー</a>
+                    <div class="border-l border-gray-300 pl-8 flex flex-col items-start">
+                        <span class="text-xs text-gray-500 mb-1">お問い合わせ・出張修理</span>
+                        <a href="tel:03-3676-2600" class="flex items-center text-lg font-bold">
+                            <i class="ph ph-phone mr-1"></i>03-3676-2600
+                        </a>
+                    </div>
+                </nav>
+                <div class="md:hidden flex items-center">
+                    <button id="mobile-menu-btn" class="text-black p-2">
+                        <i class="ph ph-list text-3xl"></i>
+                    </button>
+                </div>
+            </div>
+        </div>
+        <div id="mobile-menu" class="hidden md:hidden bg-white border-t border-gray-100 absolute w-full">
+            <div class="px-4 py-6 space-y-4 shadow-lg">
+                <a href="#lineup" class="block text-base font-medium">おすすめ自転車</a>
+                <a href="#service" class="block text-base font-medium">修理・サポート</a>
+                <a href="#knowledge" class="block text-base font-medium">メンテナンス知識</a>
+                <a href="#news" class="block text-base font-medium">お知らせ</a>
+                <a href="#qa" class="block text-base font-medium">Q&A</a>
+                <a href="#access" class="block text-base font-medium">アクセス・カレンダー</a>
+            </div>
+        </div>
+    </header>
+
+    <!-- Hero Section -->
+    <section>
+
+        <!-- ▼ スマホ専用：フルブリードヒーロー -->
+        <div class="md:hidden relative h-[85vh] overflow-hidden">
+            <img src="bike1.jpg"  alt="ナカムラサイクル" class="hero-slide active" id="slide-sp-0">
+            <img src="bike2.jpg"  alt="ナカムラサイクル" class="hero-slide" id="slide-sp-1">
+            <img src="bike3.jpg"  alt="ナカムラサイクル" class="hero-slide" id="slide-sp-2">
+            <img src="bike4.jpg"  alt="ナカムラサイクル" class="hero-slide" id="slide-sp-3">
+            <img src="bike5.jpg"  alt="ナカムラサイクル" class="hero-slide" id="slide-sp-4">
+            <!-- グラデーションオーバーレイ -->
+            <div class="absolute inset-0 bg-gradient-to-t from-black/85 via-black/25 to-black/10"></div>
+            <!-- 上部ラベル -->
+            <div class="hero-text absolute top-6 left-6">
+                <span class="text-xs text-white/70 tracking-[0.25em] uppercase font-medium">Nakamura Cycle</span>
+            </div>
+            <!-- テキスト：左下オーバーレイ -->
+            <div class="absolute bottom-0 left-0 right-0 px-6 pb-10">
+                <p class="hero-text text-[11px] text-white/60 tracking-[0.2em] mb-3 uppercase font-medium">江戸川区鹿骨の自転車屋</p>
+                <h1 class="hero-text-2 font-bold text-3xl text-white leading-tight mb-4">
+                    あなたの自転車の<br>かかりつけ医。
+                </h1>
+                <p class="hero-text-3 text-sm text-white/75 leading-relaxed mb-7">
+                    他店購入の修理もOK。<br>確かな技術で、安心のサイクルライフを。
+                </p>
+                <div class="hero-text-3 flex flex-col gap-3">
+                    <div class="flex items-center gap-3">
+                        <a href="#service"
+                           class="inline-flex items-center text-sm font-bold text-white border border-white/50 px-5 py-3 rounded-full group hover:bg-white hover:text-black transition-all duration-300">
+                            修理・料金をみる
+                            <i class="ph ph-caret-right ml-2 transition-transform group-hover:translate-x-1"></i>
+                        </a>
+                        <a href="tel:03-3676-2600"
+                           class="inline-flex items-center text-sm font-medium text-white/80 gap-1">
+                            <i class="ph ph-phone text-base"></i>
+                            03-3676-2600
+                        </a>
+                    </div>
+                    <div class="flex items-center gap-2 text-white/40 mt-1">
+                        <i class="ph ph-caret-down text-sm animate-bounce"></i>
+                        <span class="text-[10px] tracking-widest uppercase">scroll</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- ▼ PC専用：従来の横並びレイアウト -->
+        <div class="hidden md:block max-w-7xl mx-auto px-6 lg:px-8 py-24">
+            <div class="flex flex-row items-center gap-12">
+                <div class="w-1/3 flex flex-col justify-center">
+                    <div class="mb-8">
+                        <p class="hero-text font-bold text-2xl mb-3 leading-snug">江戸川区鹿骨の、<br>あなたの自転車のかかりつけ医。</p>
+                        <h1 class="hero-text-2 text-base font-bold text-gray-500 tracking-widest mb-6">ナカムラサイクル</h1>
+                        <div class="hero-text-3 border-t border-gray-300 pt-6">
+                            <p class="text-gray-600 leading-relaxed text-sm">
+                                毎日の快適な走りをサポート。<br>
+                                他店購入の自転車修理もお任せください。<br>
+                                確かな技術で、安心のサイクルライフを提供します。
+                            </p>
+                        </div>
+                    </div>
+                    <a href="#service" class="hero-text-3 inline-flex items-center text-sm font-bold group">
+                        修理のご相談・料金はこちら
+                        <i class="ph ph-caret-right ml-2 transition-transform group-hover:translate-x-1"></i>
+                    </a>
+                </div>
+                <div class="hero-img w-2/3 h-[60vh] overflow-hidden rounded-sm relative">
+                    <img src="bike1.jpg"  alt="ナカムラサイクル" class="hero-slide active" id="slide-pc-0">
+                    <img src="bike2.jpg"  alt="ナカムラサイクル" class="hero-slide" id="slide-pc-1">
+                    <img src="bike3.jpg"  alt="ナカムラサイクル" class="hero-slide" id="slide-pc-2">
+                    <img src="bike4.jpg"  alt="ナカムラサイクル" class="hero-slide" id="slide-pc-3">
+                    <img src="bike5.jpg"  alt="ナカムラサイクル" class="hero-slide" id="slide-pc-4">
+                </div>
+            </div>
+        </div>
+
+    </section>
+
+    <!-- News Section -->
+    <section id="news" class="bg-grayLight py-16 reveal">
+        <div class="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8">
+            <h2 class="text-xl font-bold mb-8 border-b border-gray-300 pb-4">お知らせ</h2>
+            <ul id="news-list" class="space-y-0">
+                <li class="py-5 px-4 text-sm text-gray-400">読み込み中...</li>
+            </ul>
+        </div>
+    </section>
+
+    <!-- Lineup -->
+    <section id="lineup" class="py-20 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 reveal">
+        <div class="flex flex-col md:flex-row md:items-end justify-between mb-12 border-b border-gray-300 pb-4">
+            <h2 class="text-3xl font-light mb-4 md:mb-0">おすすめ自転車</h2>
+            <div class="flex space-x-6 text-sm font-bold overflow-x-auto pb-2 md:pb-0">
+                <button class="tab-btn pb-2 border-b-2 border-black whitespace-nowrap" data-target="all">ALL</button>
+                <button class="tab-btn pb-2 border-b-2 border-transparent text-gray-400 hover:text-black whitespace-nowrap" data-target="ebike">電動アシスト(e-bike)</button>
+                <button class="tab-btn pb-2 border-b-2 border-transparent text-gray-400 hover:text-black whitespace-nowrap" data-target="city">通勤・通学</button>
+                <button class="tab-btn pb-2 border-b-2 border-transparent text-gray-400 hover:text-black whitespace-nowrap" data-target="kids">キッズ</button>
+            </div>
+        </div>
+        <div id="lineup-grid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
+            <p class="text-sm text-gray-400 col-span-3 py-8 text-center">読み込み中...</p>
+        </div>
+        <div class="mt-8">
+            <p class="text-sm text-gray-500">※掲載は一例です。店頭にはカタログもご用意しており、全メーカー取り寄せ可能です。</p>
+        </div>
+    </section>
+
+    <!-- Service -->
+    <section id="service" class="bg-grayLight py-20 reveal">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <h2 class="text-2xl font-light mb-12 text-center">サポート・修理サービス</h2>
+            <div class="grid grid-cols-2 md:grid-cols-4 gap-4 md:gap-8 mb-16">
+                <div class="card-lift bg-white p-8 flex flex-col items-center justify-center text-center shadow-sm cursor-pointer">
+                    <i class="ph ph-wrench text-5xl mb-4 icon-pop"></i>
+                    <h3 class="text-sm font-bold">修理・メンテナンス</h3>
+                    <p class="text-xs text-gray-500 mt-2">他店購入でも大歓迎です</p>
+                </div>
+                <div class="card-lift bg-white p-8 flex flex-col items-center justify-center text-center shadow-sm cursor-pointer">
+                    <i class="ph ph-truck text-5xl mb-4 icon-pop"></i>
+                    <h3 class="text-sm font-bold">出張修理</h3>
+                    <p class="text-xs text-gray-500 mt-2">鹿骨周辺エリア対応</p>
+                </div>
+                <div class="card-lift bg-white p-8 flex flex-col items-center justify-center text-center shadow-sm cursor-pointer">
+                    <i class="ph ph-shield-check text-5xl mb-4 icon-pop"></i>
+                    <h3 class="text-sm font-bold">定期点検・TSマーク</h3>
+                    <p class="text-xs text-gray-500 mt-2">安全に乗るための全体チェック</p>
+                </div>
+                <div class="card-lift bg-white p-8 flex flex-col items-center justify-center text-center shadow-sm cursor-pointer">
+                    <i class="ph ph-shopping-cart text-5xl mb-4 icon-pop"></i>
+                    <h3 class="text-sm font-bold">不要自転車の引取</h3>
+                    <p class="text-xs text-gray-500 mt-2">新車購入時は無料引取</p>
+                </div>
+            </div>
+            <div class="bg-white p-6 md:p-10 shadow-sm border border-gray-100">
+                <h3 class="text-xl font-bold mb-6 border-b border-gray-200 pb-4">基本修理料金表（目安）</h3>
+                <div class="overflow-x-auto">
+                    <table class="w-full text-left border-collapse min-w-[520px]">
+                        <thead>
+                            <tr class="bg-gray-50 border-b border-gray-200 text-xs text-gray-500">
+                                <th class="py-3 px-3 font-normal">修理内容</th>
+                                <th class="py-3 px-3 font-normal whitespace-nowrap">一般</th>
+                                <th class="py-3 px-3 font-normal whitespace-nowrap">電動・スポーツ</th>
+                                <th class="py-3 px-3 font-normal whitespace-nowrap">時間目安</th>
+                            </tr>
+                        </thead>
+                        <tbody class="text-sm">
+                            <tr class="border-b border-gray-100 hover:bg-gray-50">
+                                <td class="py-3 px-3 font-bold text-sm">パンク修理<span class="font-normal text-gray-500 text-xs">（水調べ含む）</span></td>
+                                <td class="py-3 px-3 whitespace-nowrap">1,100円〜</td>
+                                <td class="py-3 px-3 whitespace-nowrap">1,320円〜</td>
+                                <td class="py-3 px-3 whitespace-nowrap text-gray-500">約15分</td>
+                            </tr>
+                            <tr class="border-b border-gray-100 hover:bg-gray-50">
+                                <td class="py-3 px-3 font-bold text-sm">タイヤ・チューブ交換<span class="font-normal text-gray-500 text-xs">（前輪）</span></td>
+                                <td class="py-3 px-3 whitespace-nowrap">3,850円〜</td>
+                                <td class="py-3 px-3 whitespace-nowrap">4,500円〜</td>
+                                <td class="py-3 px-3 whitespace-nowrap text-gray-500">約30分</td>
+                            </tr>
+                            <tr class="border-b border-gray-100 hover:bg-gray-50">
+                                <td class="py-3 px-3 font-bold text-sm">タイヤ・チューブ交換<span class="font-normal text-gray-500 text-xs">（後輪）</span></td>
+                                <td class="py-3 px-3 whitespace-nowrap">4,400円〜</td>
+                                <td class="py-3 px-3 whitespace-nowrap">5,500円〜</td>
+                                <td class="py-3 px-3 whitespace-nowrap text-gray-500">約40分</td>
+                            </tr>
+                            <tr class="border-b border-gray-100 hover:bg-gray-50">
+                                <td class="py-3 px-3 font-bold text-sm">ブレーキワイヤー交換</td>
+                                <td class="py-3 px-3 whitespace-nowrap">1,650円〜</td>
+                                <td class="py-3 px-3 whitespace-nowrap">2,200円〜</td>
+                                <td class="py-3 px-3 whitespace-nowrap text-gray-500">約20分</td>
+                            </tr>
+                            <tr class="border-b border-gray-100 hover:bg-gray-50">
+                                <td class="py-3 px-3 font-bold text-sm">一式点検<span class="font-normal text-gray-500 text-xs">（TSマーク付帯なし）</span></td>
+                                <td class="py-3 px-3 whitespace-nowrap">2,200円</td>
+                                <td class="py-3 px-3 whitespace-nowrap">2,750円</td>
+                                <td class="py-3 px-3 whitespace-nowrap text-gray-500">半日〜</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <p class="text-xs text-gray-500 mt-4">
+                    ※価格はすべて税込です。部品代込みの価格目安です。<br>
+                    ※車種や状態によって価格や時間は変動いたします。事前にお見積りいたします。
+                </p>
+            </div>
+        </div>
+    </section>
+
+    <!-- Knowledge Section -->
+    <section id="knowledge" class="py-20 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 reveal">
+        <div class="mb-12 border-b border-gray-300 pb-4">
+            <p class="text-xs text-gray-400 tracking-widest uppercase mb-2">Bike Maintenance Tips</p>
+            <h2 class="text-2xl font-light">自転車オーナーが知っておきたい<br class="sm:hidden">メンテナンス知識</h2>
+            <p class="text-sm text-gray-500 mt-3">ネットの情報より、長年地域の自転車を見てきた専門店からの知識を参考にしてください。</p>
+        </div>
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+
+            <!-- タイヤ空気圧 -->
+            <div class="card-lift bg-white border border-gray-100 p-7 shadow-sm">
+                <div class="flex items-center gap-3 mb-4">
+                    <div class="w-10 h-10 rounded-full bg-black flex items-center justify-center shrink-0">
+                        <i class="ph ph-gauge text-white text-lg"></i>
+                    </div>
+                    <h3 class="font-bold text-base">タイヤの空気は月1回チェック</h3>
+                </div>
+                <p class="text-sm text-gray-600 leading-relaxed">自転車のタイヤは乗っていなくても少しずつ空気が抜けます。空気不足のまま走るとパンクしやすくなり、タイヤ・リムへの負担も増大。適正空気圧はタイヤ側面に記載されています（例：300kPa）。月1回、親指で押してしっかり硬ければOKの目安です。</p>
+                <div class="mt-4 pt-4 border-t border-gray-100 flex items-start gap-2 text-xs text-gray-400">
+                    <i class="ph ph-warning text-yellow-500 text-base shrink-0 mt-0.5"></i>
+                    <span>空気が柔らかい状態での走行はリム打ちパンクの原因になります</span>
+                </div>
+            </div>
+
+            <!-- ブレーキ -->
+            <div class="card-lift bg-white border border-gray-100 p-7 shadow-sm">
+                <div class="flex items-center gap-3 mb-4">
+                    <div class="w-10 h-10 rounded-full bg-black flex items-center justify-center shrink-0">
+                        <i class="ph ph-hand-pointing text-white text-lg"></i>
+                    </div>
+                    <h3 class="font-bold text-base">ブレーキ異常の3つのサイン</h3>
+                </div>
+                <p class="text-sm text-gray-600 leading-relaxed mb-3">以下のいずれかがあれば、早めにご相談ください。</p>
+                <ul class="text-sm text-gray-600 space-y-2">
+                    <li class="flex items-start gap-2"><i class="ph ph-circle-fill text-[6px] text-gray-400 mt-2 shrink-0"></i><span><strong>キーキー・ギーギー音がする</strong>——ブレーキシューの摩耗または位置ズレ</span></li>
+                    <li class="flex items-start gap-2"><i class="ph ph-circle-fill text-[6px] text-gray-400 mt-2 shrink-0"></i><span><strong>レバーがハンドルまで引ける</strong>——ワイヤーの伸びやシューの消耗</span></li>
+                    <li class="flex items-start gap-2"><i class="ph ph-circle-fill text-[6px] text-gray-400 mt-2 shrink-0"></i><span><strong>片効き・ハンドルが振れる</strong>——調整・センター出しが必要</span></li>
+                </ul>
+                <div class="mt-4 pt-4 border-t border-gray-100 flex items-start gap-2 text-xs text-gray-400">
+                    <i class="ph ph-warning text-red-400 text-base shrink-0 mt-0.5"></i>
+                    <span>ブレーキ不良は事故直結。異変を感じたらすぐにご来店を</span>
+                </div>
+            </div>
+
+            <!-- チェーン -->
+            <div class="card-lift bg-white border border-gray-100 p-7 shadow-sm">
+                <div class="flex items-center gap-3 mb-4">
+                    <div class="w-10 h-10 rounded-full bg-black flex items-center justify-center shrink-0">
+                        <i class="ph ph-gear text-white text-lg"></i>
+                    </div>
+                    <h3 class="font-bold text-base">チェーンのサビと油切れ</h3>
+                </div>
+                <p class="text-sm text-gray-600 leading-relaxed">ペダルを漕ぐと「ジャリジャリ」「ギシギシ」音がする場合はチェーンの油切れかサビのサインです。放置するとスプロケット（歯車）も削れ、高額修理になることも。雨の日によく乗る方は特に注意が必要です。</p>
+                <div class="mt-4 pt-4 border-t border-gray-100 flex items-start gap-2 text-xs text-gray-400">
+                    <i class="ph ph-lightbulb text-blue-400 text-base shrink-0 mt-0.5"></i>
+                    <span>チェーン清掃・注油は工賃込み550円〜。気軽にお立ち寄りください</span>
+                </div>
+            </div>
+
+            <!-- タイヤ摩耗 -->
+            <div class="card-lift bg-white border border-gray-100 p-7 shadow-sm">
+                <div class="flex items-center gap-3 mb-4">
+                    <div class="w-10 h-10 rounded-full bg-black flex items-center justify-center shrink-0">
+                        <i class="ph ph-tire text-white text-lg"></i>
+                    </div>
+                    <h3 class="font-bold text-base">タイヤのひび割れ・摩耗</h3>
+                </div>
+                <p class="text-sm text-gray-600 leading-relaxed">タイヤの寿命は走行距離・保管環境によりますが、一般的に3〜5年が目安です。側面のひび割れ、接地面の台形化（センターが平らになっている状態）は要注意。パンクが頻発するようになったら交換のサインです。</p>
+                <div class="mt-4 pt-4 border-t border-gray-100 flex items-start gap-2 text-xs text-gray-400">
+                    <i class="ph ph-lightbulb text-blue-400 text-base shrink-0 mt-0.5"></i>
+                    <span>前輪タイヤ交換 3,850円〜。タイヤの状態はお気軽にご相談を</span>
+                </div>
+            </div>
+
+            <!-- ライト -->
+            <div class="card-lift bg-white border border-gray-100 p-7 shadow-sm">
+                <div class="flex items-center gap-3 mb-4">
+                    <div class="w-10 h-10 rounded-full bg-black flex items-center justify-center shrink-0">
+                        <i class="ph ph-flashlight text-white text-lg"></i>
+                    </div>
+                    <h3 class="font-bold text-base">ライトの点検と法律</h3>
+                </div>
+                <p class="text-sm text-gray-600 leading-relaxed">夜間のライト点灯は道路交通法で義務付けられています。電池式ライトは定期的に電池交換を。ダイナモ式（タイヤで発電するタイプ）は経年劣化でローラー部がスリップすることがあります。暗くなっても点かない場合はすぐにご確認ください。</p>
+                <div class="mt-4 pt-4 border-t border-gray-100 flex items-start gap-2 text-xs text-gray-400">
+                    <i class="ph ph-warning text-yellow-500 text-base shrink-0 mt-0.5"></i>
+                    <span>無灯火は違反。夜間乗る方は必ずライトの動作確認を</span>
+                </div>
+            </div>
+
+            <!-- ガタつき -->
+            <div class="card-lift bg-white border border-gray-100 p-7 shadow-sm">
+                <div class="flex items-center gap-3 mb-4">
+                    <div class="w-10 h-10 rounded-full bg-black flex items-center justify-center shrink-0">
+                        <i class="ph ph-arrows-out-cardinal text-white text-lg"></i>
+                    </div>
+                    <h3 class="font-bold text-base">ハンドル・サドルのガタつき</h3>
+                </div>
+                <p class="text-sm text-gray-600 leading-relaxed">ハンドルやサドルがグラグラする場合、固定ボルトの緩みが原因のことがほとんどです。放置すると転倒の危険があります。乗車前に手でハンドルを前後に揺らす・サドルを左右に動かす簡単なチェックを習慣にしましょう。</p>
+                <div class="mt-4 pt-4 border-t border-gray-100 flex items-start gap-2 text-xs text-gray-400">
+                    <i class="ph ph-lightbulb text-blue-400 text-base shrink-0 mt-0.5"></i>
+                    <span>ボルト締め直しは短時間で対応可能。気軽にお持ち込みください</span>
+                </div>
+            </div>
+
+        </div>
+
+        <!-- CTA -->
+        <div class="mt-12 bg-black text-white p-8 md:p-10 flex flex-col md:flex-row items-center justify-between gap-6">
+            <div>
+                <p class="text-lg font-bold mb-1">「うちの自転車、大丈夫かな？」と思ったら</p>
+                <p class="text-sm text-gray-300">点検だけでも大歓迎です。他店購入・ネット購入の自転車もお気軽にどうぞ。</p>
+            </div>
+            <a href="tel:03-3676-2600" class="shrink-0 inline-flex items-center gap-2 border border-white px-6 py-3 text-sm font-bold hover:bg-white hover:text-black transition-all duration-300">
+                <i class="ph ph-phone"></i>03-3676-2600
+            </a>
+        </div>
+    </section>
+
+    <!-- Q&A -->
+    <section id="qa" class="py-20 max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 reveal">
+        <h2 class="text-2xl font-light mb-10 text-center">よくあるご質問</h2>
+        <div class="space-y-4">
+            <details class="bg-white border border-gray-200 p-5 group cursor-pointer">
+                <summary class="flex justify-between items-center font-bold text-lg">
+                    インターネットや他のお店で買った自転車でも修理してもらえますか？
+                    <i class="ph ph-plus text-gray-400 group-open:hidden"></i>
+                    <i class="ph ph-minus text-gray-400 hidden group-open:block"></i>
+                </summary>
+                <div class="mt-4 text-gray-600 text-sm leading-relaxed border-t border-gray-100 pt-4">
+                    はい、大歓迎です！どこで購入された自転車であっても、誠心誠意修理・メンテナンスさせていただきます。お気軽にお持ち込みください。
+                </div>
+            </details>
+            <details class="bg-white border border-gray-200 p-5 group cursor-pointer">
+                <summary class="flex justify-between items-center font-bold text-lg">
+                    出張修理はどのエリアまで対応していますか？
+                    <i class="ph ph-plus text-gray-400 group-open:hidden"></i>
+                    <i class="ph ph-minus text-gray-400 hidden group-open:block"></i>
+                </summary>
+                <div class="mt-4 text-gray-600 text-sm leading-relaxed border-t border-gray-100 pt-4">
+                    主に江戸川区鹿骨を中心に、片道15分圏内（春江町、松本、篠崎など）を目安に対応しております。出張費（1,000円〜）が別途かかります。混雑時はすぐにお伺いできない場合がございますので、まずはお電話でご相談ください。
+                </div>
+            </details>
+            <details class="bg-white border border-gray-200 p-5 group cursor-pointer">
+                <summary class="flex justify-between items-center font-bold text-lg">
+                    修理に時間はどれくらいかかりますか？代車はありますか？
+                    <i class="ph ph-plus text-gray-400 group-open:hidden"></i>
+                    <i class="ph ph-minus text-gray-400 hidden group-open:block"></i>
+                </summary>
+                <div class="mt-4 text-gray-600 text-sm leading-relaxed border-t border-gray-100 pt-4">
+                    パンク修理などであれば15分程度でお渡し可能です。部品の取り寄せが必要な修理やオーバーホールの場合は数日お預かりとなります。お預かり期間中は、無料で代車の貸し出しを行っております（台数に限りがございます）。
+                </div>
+            </details>
+            <details class="bg-white border border-gray-200 p-5 group cursor-pointer">
+                <summary class="flex justify-between items-center font-bold text-lg">
+                    クレジットカードやPayPayは使えますか？
+                    <i class="ph ph-plus text-gray-400 group-open:hidden"></i>
+                    <i class="ph ph-minus text-gray-400 hidden group-open:block"></i>
+                </summary>
+                <div class="mt-4 text-gray-600 text-sm leading-relaxed border-t border-gray-100 pt-4">
+                    はい、各種クレジットカード（Visa, Mastercard, JCBなど）および、PayPay、交通系ICなどのキャッシュレス決済に対応しております。
+                </div>
+            </details>
+        </div>
+    </section>
+
+    <!-- Calendar & Access -->
+    <section id="access" class="bg-grayLight py-20">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-12">
+                <div>
+                    <h2 class="text-2xl font-light mb-8">営業日カレンダー</h2>
+                    <div class="bg-white p-6 shadow-sm border border-gray-100 mb-6">
+                        <!-- ヘッダー：ナビ + 凡例 -->
+                        <div class="flex items-center justify-between mb-4">
+                            <div class="flex items-center gap-3">
+                                <button id="cal-prev" class="w-8 h-8 flex items-center justify-center rounded-full border border-gray-200 hover:bg-gray-100 transition text-gray-500 disabled:opacity-30 disabled:cursor-not-allowed">
+                                    <i class="ph ph-caret-left text-sm"></i>
+                                </button>
+                                <div class="text-lg font-bold min-w-[120px] text-center" id="calendar-month-year"></div>
+                                <button id="cal-next" class="w-8 h-8 flex items-center justify-center rounded-full border border-gray-200 hover:bg-gray-100 transition text-gray-500 disabled:opacity-30 disabled:cursor-not-allowed">
+                                    <i class="ph ph-caret-right text-sm"></i>
+                                </button>
+                            </div>
+                            <button id="cal-today" class="text-xs text-gray-500 border border-gray-300 px-3 py-1 rounded-full hover:bg-gray-100 transition">今月</button>
+                        </div>
+                        <div class="flex gap-3 text-xs flex-wrap mb-4">
+                            <div class="flex items-center"><span class="inline-block w-3 h-3 bg-red-500 mr-1 rounded-sm"></span> 定休日</div>
+                            <div class="flex items-center"><span class="inline-block w-3 h-3 bg-yellow-400 mr-1 rounded-sm"></span> 臨時休業</div>
+                            <div class="flex items-center"><span class="inline-block w-3 h-3 bg-green-500 mr-1 rounded-sm"></span> 特別営業</div>
+                        </div>
+                        <!-- カレンダー本体 -->
+                        <div class="w-full">
+                            <div class="grid grid-cols-7 gap-px bg-gray-200 text-center text-xs font-bold mb-px">
+                                <div class="bg-white py-2 text-red-500">SUN</div>
+                                <div class="bg-white py-2">MON</div>
+                                <div class="bg-white py-2">TUE</div>
+                                <div class="bg-white py-2">WED</div>
+                                <div class="bg-white py-2">THU</div>
+                                <div class="bg-white py-2">FRI</div>
+                                <div class="bg-white py-2 text-blue-500">SAT</div>
+                            </div>
+                            <div id="calendar-grid" class="grid grid-cols-7 gap-px bg-gray-200"></div>
+                        </div>
+                    </div>
+                    <div class="flex flex-col space-y-2 text-sm text-gray-600 border-l-2 border-black pl-4">
+                        <p><strong class="text-black">営業時間</strong> : 10:00 〜 19:00</p>
+                        <p><strong class="text-black">定休日</strong> : 水曜日</p>
+                        <p>※イベント出店等により変更になる場合がございます。最新のお知らせをご確認ください。</p>
+                    </div>
+                </div>
+                <div class="flex flex-col h-full">
+                    <h2 class="text-2xl font-light mb-8">アクセス</h2>
+                    <div class="flex-grow bg-gray-300 relative min-h-[300px] mb-6">
+                        <iframe
+                            src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3239.6949177147385!2d139.88979767578888!3d35.70912447257827!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x6018875c46692749%3A0x753cceb09343e3b9!2z44OK44Kr44Og44Op44K144Kk44Kv44Or!5e0!3m2!1sja!2sjp!4v1775143971852!5m2!1sja!2sjp"
+                            width="100%" height="100%" style="border:0; position:absolute; inset:0;"
+                            allowfullscreen="" loading="lazy" referrerpolicy="no-referrer-when-downgrade">
+                        </iframe>
+                    </div>
+                    <div>
+                        <h3 class="font-bold text-lg mb-2">ナカムラサイクル</h3>
+                        <p class="text-sm text-gray-600 mb-2">〒133-0073 東京都江戸川区鹿骨</p>
+                        <p class="text-sm text-gray-600 mb-4">
+                            TEL: <a href="tel:03-3676-2600" class="underline">03-3676-2600</a><br>
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="bg-black text-white pt-16 pb-8">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex flex-col md:flex-row justify-between items-start mb-12">
+                <div class="mb-8 md:mb-0">
+                    <p class="text-2xl font-bold tracking-widest mb-4">ナカムラサイクル</p>
+                    <p class="text-gray-400 text-sm mb-4">江戸川区鹿骨の自転車屋</p>
+                    <a href="tel:03-3676-2600" class="text-xl font-light tracking-widest hover:text-gray-300 transition">
+                        TEL: 03-3676-2600
+                    </a>
+                </div>
+                <div class="flex space-x-12">
+                    <div class="flex flex-col space-y-3 text-sm text-gray-400">
+                        <a href="#lineup" class="hover:text-white transition">おすすめ自転車</a>
+                        <a href="#service" class="hover:text-white transition">修理・サポート</a>
+                        <a href="#knowledge" class="hover:text-white transition">メンテナンス知識</a>
+                        <a href="#news" class="hover:text-white transition">お知らせ</a>
+                    </div>
+                    <div class="flex flex-col space-y-3 text-sm text-gray-400">
+                        <a href="#qa" class="hover:text-white transition">Q&A</a>
+                        <a href="#access" class="hover:text-white transition">アクセス</a>
+                    </div>
+                </div>
+            </div>
+            <!-- Instagram -->
+            <div class="border-t border-gray-800 py-10 flex justify-center">
+                <a href="https://www.instagram.com/nakamuracycle.20251113/" target="_blank"
+                   class="flex flex-col items-center gap-3 group">
+                    <i class="ph ph-instagram-logo text-5xl text-white group-hover:text-pink-400 transition"></i>
+                    <p class="text-xs text-gray-400 group-hover:text-pink-300 transition">Instagramでも発信中</p>
+                    <p class="text-sm font-bold tracking-wide text-white group-hover:text-pink-400 transition">@nakamuracycle.20251113</p>
+                </a>
+            </div>
+
+            <div class="border-t border-gray-800 pt-8 flex flex-col md:flex-row justify-between items-center text-xs text-gray-500">
+                <p>&copy; 2026 ナカムラサイクル. All Rights Reserved.</p>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        // スクロールフェードイン
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(el => {
+                if (el.isIntersecting) {
+                    el.target.classList.add('visible');
+                    observer.unobserve(el.target);
+                }
+            });
+        }, { threshold: 0.12 });
+        document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
+
+        // microCMS お知らせ取得
+        fetch('https://nakamuracycle.microcms.io/api/v1/news', {
+            headers: { 'X-MICROCMS-API-KEY': 'MMqt6flZ3zpi1NXBPXH1x8nQxiXjnAcYnfVf' }
+        })
+        .then(res => res.json())
+        .then(data => {
+            const list = document.getElementById('news-list');
+            if (!data.contents || data.contents.length === 0) {
+                list.innerHTML = '<li class="py-5 px-4 text-sm text-gray-400">現在お知らせはありません。</li>';
+                return;
+            }
+            list.innerHTML = data.contents.map(item => {
+                const date = new Date(item.publishedAt);
+                const formatted = `${date.getFullYear()}.${String(date.getMonth()+1).padStart(2,'0')}.${String(date.getDate()).padStart(2,'0')}`;
+                const body = item.content
+                    ? `<div class="text-sm text-gray-600 mt-2 leading-relaxed">${item.content}</div>`
+                    : '';
+                return `
+                <li class="border-b border-gray-200 py-5 px-4">
+                    <div class="flex gap-4">
+                        <div class="w-28 shrink-0 text-sm text-gray-400 pt-0.5">${formatted}</div>
+                        <div class="flex-1">
+                            <p class="text-base font-medium">${item.title}</p>
+                            ${body}
+                        </div>
+                    </div>
+                </li>`;
+            }).join('');
+        })
+        .catch(() => {
+            document.getElementById('news-list').innerHTML =
+                '<li class="py-5 px-4 text-sm text-gray-400">お知らせを取得できませんでした。</li>';
+        });
+
+        // ── ヒーロースライドショー ──
+        (function() {
+            const total = 5;
+            const prefixes = ['slide-sp-', 'slide-pc-'];
+            let current = 0;
+            setInterval(() => {
+                const next = (current + 1) % total;
+                prefixes.forEach(p => {
+                    const cur = document.getElementById(p + current);
+                    const nxt = document.getElementById(p + next);
+                    if (cur) cur.classList.remove('active');
+                    if (nxt) nxt.classList.add('active');
+                });
+                current = next;
+            }, 5000);
+        })();
+
+        // モバイルメニュー
+        document.getElementById('mobile-menu-btn').addEventListener('click', function() {
+            document.getElementById('mobile-menu').classList.toggle('hidden');
+        });
+        document.querySelectorAll('#mobile-menu a').forEach(link => {
+            link.addEventListener('click', () => {
+                document.getElementById('mobile-menu').classList.add('hidden');
+            });
+        });
+
+        // ラインナップ取得
+        fetch('https://nakamuracycle.microcms.io/api/v1/lineup?limit=100', {
+            headers: { 'X-MICROCMS-API-KEY': 'MMqt6flZ3zpi1NXBPXH1x8nQxiXjnAcYnfVf' }
+        })
+        .then(res => res.json())
+        .then(data => {
+            const grid = document.getElementById('lineup-grid');
+            if (!data.contents || data.contents.length === 0) {
+                grid.innerHTML = '<p class="text-sm text-gray-400 col-span-3 py-8 text-center">現在準備中です。</p>';
+                return;
+            }
+            grid.innerHTML = data.contents.map(item => `
+                <div class="item-card ${item.category || ''} group cursor-pointer">
+                    <div class="overflow-hidden mb-4 bg-gray-100 aspect-[4/3] flex items-center justify-center">
+                        ${item.image
+                            ? `<img src="${item.image.url}" alt="${item.name}" class="w-full h-full object-cover group-hover:scale-105 transition duration-500">`
+                            : `<i class="ph ph-bicycle text-6xl text-gray-300"></i>`}
+                    </div>
+                    <div>
+                        <h3 class="text-lg font-bold">${item.name}</h3>
+                        <p class="text-sm text-gray-500 mt-1">${item.description || ''}</p>
+                    </div>
+                </div>`).join('');
+
+            // タブ切り替え（動的生成後に再設定）
+            setupTabs();
+        })
+        .catch(() => {
+            document.getElementById('lineup-grid').innerHTML =
+                '<p class="text-sm text-gray-400 col-span-3 py-8 text-center">商品情報を取得できませんでした。</p>';
+        });
+
+        // タブ切り替え
+        function setupTabs() {
+            const tabBtns = document.querySelectorAll('.tab-btn');
+            tabBtns.forEach(btn => {
+                btn.addEventListener('click', () => {
+                    tabBtns.forEach(b => {
+                        b.classList.remove('border-black', 'text-black');
+                        b.classList.add('border-transparent', 'text-gray-400');
+                    });
+                    btn.classList.remove('border-transparent', 'text-gray-400');
+                    btn.classList.add('border-black', 'text-black');
+                    const target = btn.getAttribute('data-target');
+                    document.querySelectorAll('.item-card').forEach(card => {
+                        card.style.display = (target === 'all' || card.classList.contains(target)) ? 'block' : 'none';
+                    });
+                });
+            });
+        }
+        setupTabs();
+
+        // ── カレンダー（月ナビ対応・最大12ヶ月先まで）──
+        (async function initCalendar() {
+            const grid  = document.getElementById('calendar-grid');
+            const label = document.getElementById('calendar-month-year');
+            const btnPrev  = document.getElementById('cal-prev');
+            const btnNext  = document.getElementById('cal-next');
+            const btnToday = document.getElementById('cal-today');
+
+            const today = new Date();
+            const todayY = today.getFullYear();
+            const todayM = today.getMonth();
+
+            // 表示できる範囲：前月〜12ヶ月先
+            const minDate = new Date(todayY, todayM - 1, 1);
+            const maxDate = new Date(todayY, todayM + 12, 1);
+
+            let viewYear  = todayY;
+            let viewMonth = todayM;
+
+            // microCMSからデータを一度だけ取得
+            const headers = { 'X-MICROCMS-API-KEY': 'MMqt6flZ3zpi1NXBPXH1x8nQxiXjnAcYnfVf' };
+            let holidayDates     = [];
+            let specialOpenDates = [];
+            const toKey = d => {
+                const dt = new Date(d);
+                return `${dt.getFullYear()}-${dt.getMonth()}-${dt.getDate()}`;
+            };
+            try {
+                const res  = await fetch('https://nakamuracycle.microcms.io/api/v1/calendar?limit=100', { headers });
+                const data = await res.json();
+                (data.contents || []).forEach(item => {
+                    const key = toKey(item.date);
+                    if (item.種類 === '特別営業日') specialOpenDates.push(key);
+                    else holidayDates.push(key);
+                });
+            } catch(e) { console.log('カレンダー取得エラー', e); }
+
+            const monthNames = ['1月','2月','3月','4月','5月','6月','7月','8月','9月','10月','11月','12月'];
+
+            function drawCalendar() {
+                const year     = viewYear;
+                const month    = viewMonth;
+                const firstDay = new Date(year, month, 1).getDay();
+                const total    = new Date(year, month + 1, 0).getDate();
+
+                label.textContent = `${year}年 ${monthNames[month]}`;
+
+                // ← ボタン：最小月より前には行けない
+                const prevDate = new Date(year, month - 1, 1);
+                btnPrev.disabled = prevDate < minDate;
+
+                // → ボタン：最大月より先には行けない
+                const nextDate = new Date(year, month + 1, 1);
+                btnNext.disabled = nextDate >= maxDate;
+
+                let html = '';
+                for (let i = 0; i < 42; i++) {
+                    const dayNum = i - firstDay + 1;
+                    if (dayNum < 1 || dayNum > total) {
+                        html += `<div class="bg-white py-4"></div>`;
+                        continue;
+                    }
+
+                    const dow      = new Date(year, month, dayNum).getDay();
+                    const dateKey  = `${year}-${month}-${dayNum}`;
+                    const isToday  = (year === todayY && month === todayM && dayNum === today.getDate());
+                    const isPast   = new Date(year, month, dayNum) < new Date(todayY, todayM, today.getDate());
+
+                    const isDefaultHoliday = (dow === 3);
+                    const isSpecialOpen    = specialOpenDates.includes(dateKey);
+                    const isExtraHoliday   = holidayDates.includes(dateKey);
+
+                    // セル背景色
+                    let bgStyle = 'background:#fff';
+                    let labelHtml = '';
+
+                    if (isDefaultHoliday && !isSpecialOpen) {
+                        bgStyle = isPast ? 'background:#fff5f5' : 'background:#fee2e2';
+                        labelHtml = `<span class="absolute bottom-0.5 left-0 right-0 text-center text-[9px] leading-none text-red-400">定休</span>`;
+                    }
+                    if (isExtraHoliday) {
+                        bgStyle = isPast ? 'background:#fffbeb' : 'background:#fef3c7';
+                        labelHtml = `<span class="absolute bottom-0.5 left-0 right-0 text-center text-[9px] leading-none text-yellow-600">臨休</span>`;
+                    }
+                    if (isSpecialOpen && isDefaultHoliday) {
+                        bgStyle = isPast ? 'background:#f0fdf4' : 'background:#dcfce7';
+                        labelHtml = `<span class="absolute bottom-0.5 left-0 right-0 text-center text-[9px] leading-none text-green-600">特営</span>`;
+                    }
+
+                    const todayRing = isToday
+                        ? 'ring-2 ring-blue-500 ring-offset-1 rounded-full'
+                        : '';
+                    const textClass = isToday   ? 'font-bold text-blue-600' :
+                                      isPast    ? 'text-gray-300' :
+                                      dow === 0 ? 'text-red-400' :
+                                      dow === 6 ? 'text-blue-400' : 'text-gray-900';
+
+                    html += `
+                        <div class="py-2 flex items-center justify-center relative" style="${bgStyle}">
+                            <span class="w-8 h-8 flex items-center justify-center text-sm ${textClass} ${todayRing}">${dayNum}</span>
+                            ${labelHtml}
+                        </div>`;
+                }
+                grid.innerHTML = html;
+            }
+
+            btnPrev.addEventListener('click', () => {
+                if (btnPrev.disabled) return;
+                viewMonth--;
+                if (viewMonth < 0) { viewMonth = 11; viewYear--; }
+                drawCalendar();
+            });
+
+            btnNext.addEventListener('click', () => {
+                if (btnNext.disabled) return;
+                viewMonth++;
+                if (viewMonth > 11) { viewMonth = 0; viewYear++; }
+                drawCalendar();
+            });
+
+            btnToday.addEventListener('click', () => {
+                viewYear  = todayY;
+                viewMonth = todayM;
+                drawCalendar();
+            });
+
+            drawCalendar();
+        })();
+    </script>
+</body>
+</html>
