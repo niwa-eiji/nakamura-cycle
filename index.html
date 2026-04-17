@@ -91,14 +91,14 @@
         }
         .nav-underline:hover::after { width: 100%; }
 
-        /* ── Ken Burns ── */
-        @keyframes kenburns {
-            0%   { transform: scale(1)    translate(0, 0); }
-            100% { transform: scale(1.08) translate(-1%, -1%); }
-        }
-        .kenburns-img {
-            animation: kenburns 12s ease-in-out infinite alternate;
-            transform-origin: center center;
+        /* ── ヒーロー：Androidスクロール対策 ── */
+        .hero-bg {
+            -webkit-transform: translateZ(0);
+            transform: translateZ(0);
+            will-change: auto;
+            overscroll-behavior: none;
+            -webkit-backface-visibility: hidden;
+            backface-visibility: hidden;
         }
 
 
@@ -156,8 +156,8 @@
     <section>
 
         <!-- ▼ スマホ専用：フルブリードヒーロー -->
-        <div class="md:hidden relative h-[85vh]"
-             style="background-image:url('https://images.pexels.com/photos/132682/pexels-photo-132682.jpeg?auto=compress&cs=tinysrgb&w=1200&q=85');background-size:cover;background-position:center;">
+        <div class="md:hidden hero-bg relative h-[85vh]"
+             style="background-image:url('https://images.pexels.com/photos/132682/pexels-photo-132682.jpeg?auto=compress&cs=tinysrgb&w=1200&q=85');background-size:cover;background-position:center;background-attachment:scroll;">
             <!-- グラデーションオーバーレイ -->
             <div class="absolute inset-0 bg-gradient-to-t from-black/85 via-black/25 to-black/10"></div>
             <!-- 上部ラベル -->
@@ -214,8 +214,8 @@
                         <i class="ph ph-caret-right ml-2 transition-transform group-hover:translate-x-1"></i>
                     </a>
                 </div>
-                <div class="hero-img w-2/3 h-[60vh] rounded-sm"
-                     style="background-image:url('https://images.pexels.com/photos/132682/pexels-photo-132682.jpeg?auto=compress&cs=tinysrgb&w=1600&q=90');background-size:cover;background-position:center;">
+                <div class="hero-img hero-bg w-2/3 h-[60vh] rounded-sm"
+                     style="background-image:url('https://images.pexels.com/photos/132682/pexels-photo-132682.jpeg?auto=compress&cs=tinysrgb&w=1600&q=90');background-size:cover;background-position:center;background-attachment:scroll;">
                 </div>
             </div>
         </div>
