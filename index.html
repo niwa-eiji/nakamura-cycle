@@ -101,17 +101,18 @@
             transform-origin: center center;
         }
 
-        /* ── ヒーロースライドショー ── */
-        .hero-slide {
+        /* ── ヒーロー画像（1枚固定） ── */
+        .hero-img-fixed {
             position: absolute; inset: 0;
             width: 100%; height: 100%;
             object-fit: cover;
-            opacity: 0;
-            transition: opacity 1.2s ease-in-out;
-            animation: kenburns 12s ease-in-out infinite alternate;
-            transform-origin: center center;
+            /* GPU描画を強制：スマホスクロールのガタつき解消 */
+            transform: translateZ(0);
+            -webkit-transform: translateZ(0);
+            will-change: transform;
+            backface-visibility: hidden;
+            -webkit-backface-visibility: hidden;
         }
-        .hero-slide.active { opacity: 1; }
 
         @keyframes fadeIn {
             from { opacity: 0; transform: translateY(-10px); }
@@ -168,11 +169,7 @@
 
         <!-- ▼ スマホ専用：フルブリードヒーロー -->
         <div class="md:hidden relative h-[85vh] overflow-hidden">
-            <img src="https://images.pexels.com/photos/31597520/pexels-photo-31597520.jpeg?auto=compress&cs=tinysrgb&w=1600&h=900&fit=crop" alt="東京の自転車" class="hero-slide active" id="slide-sp-0">
-            <img src="https://images.pexels.com/photos/35045019/pexels-photo-35045019.jpeg?auto=compress&cs=tinysrgb&w=1600&h=900&fit=crop" alt="渋谷の自転車" class="hero-slide" id="slide-sp-1">
-            <img src="https://images.pexels.com/photos/3719482/pexels-photo-3719482.jpeg?auto=compress&cs=tinysrgb&w=1600&h=900&fit=crop" alt="アジアの街の自転車" class="hero-slide" id="slide-sp-2">
-            <img src="https://images.pexels.com/photos/30979561/pexels-photo-30979561.jpeg?auto=compress&cs=tinysrgb&w=1600&h=900&fit=crop" alt="京都の自転車駐輪" class="hero-slide" id="slide-sp-3">
-            <img src="https://images.pexels.com/photos/132682/pexels-photo-132682.jpeg?auto=compress&cs=tinysrgb&w=1600&h=900&fit=crop" alt="自転車修理" class="hero-slide" id="slide-sp-4">
+            <img src="https://images.pexels.com/photos/132682/pexels-photo-132682.jpeg?auto=compress&cs=tinysrgb&w=1600&h=900&fit=crop" alt="自転車修理店内" class="hero-img-fixed">
             <!-- グラデーションオーバーレイ -->
             <div class="absolute inset-0 bg-gradient-to-t from-black/85 via-black/25 to-black/10"></div>
             <!-- 上部ラベル -->
@@ -230,11 +227,7 @@
                     </a>
                 </div>
                 <div class="hero-img w-2/3 h-[60vh] overflow-hidden rounded-sm relative">
-                    <img src="https://images.pexels.com/photos/31597520/pexels-photo-31597520.jpeg?auto=compress&cs=tinysrgb&w=1600&h=900&fit=crop" alt="東京の自転車" class="hero-slide active" id="slide-pc-0">
-                    <img src="https://images.pexels.com/photos/35045019/pexels-photo-35045019.jpeg?auto=compress&cs=tinysrgb&w=1600&h=900&fit=crop" alt="渋谷の自転車" class="hero-slide" id="slide-pc-1">
-                    <img src="https://images.pexels.com/photos/3719482/pexels-photo-3719482.jpeg?auto=compress&cs=tinysrgb&w=1600&h=900&fit=crop" alt="アジアの街の自転車" class="hero-slide" id="slide-pc-2">
-                    <img src="https://images.pexels.com/photos/30979561/pexels-photo-30979561.jpeg?auto=compress&cs=tinysrgb&w=1600&h=900&fit=crop" alt="京都の自転車駐輪" class="hero-slide" id="slide-pc-3">
-                    <img src="https://images.pexels.com/photos/132682/pexels-photo-132682.jpeg?auto=compress&cs=tinysrgb&w=1600&h=900&fit=crop" alt="自転車修理" class="hero-slide" id="slide-pc-4">
+                    <img src="https://images.pexels.com/photos/132682/pexels-photo-132682.jpeg?auto=compress&cs=tinysrgb&w=1600&h=900&fit=crop" alt="自転車修理店内" class="hero-img-fixed kenburns-img">
                 </div>
             </div>
         </div>
@@ -665,23 +658,6 @@
             document.getElementById('news-list').innerHTML =
                 '<li class="py-5 px-4 text-sm text-gray-400">お知らせを取得できませんでした。</li>';
         });
-
-        // ── ヒーロースライドショー ──
-        (function() {
-            const total = 5;
-            const prefixes = ['slide-sp-', 'slide-pc-'];
-            let current = 0;
-            setInterval(() => {
-                const next = (current + 1) % total;
-                prefixes.forEach(p => {
-                    const cur = document.getElementById(p + current);
-                    const nxt = document.getElementById(p + next);
-                    if (cur) cur.classList.remove('active');
-                    if (nxt) nxt.classList.add('active');
-                });
-                current = next;
-            }, 5000);
-        })();
 
         // モバイルメニュー
         document.getElementById('mobile-menu-btn').addEventListener('click', function() {
