@@ -777,8 +777,10 @@
                 const data = await res.json();
                 (data.contents || []).forEach(item => {
                     const key  = toKey(item.date);
-                    const type = (item.type || '').trim();
-                    if (type === '特別営業日' || type === '特別営業') {
+                    // typeは配列で返るので配列・文字列両対応
+                    const typeArr = Array.isArray(item.type) ? item.type : [item.type || ''];
+                    const isSpecial = typeArr.some(v => v === '特別営業日' || v === '特別営業');
+                    if (isSpecial) {
                         specialOpenDates.push(key);
                     } else {
                         holidayDates.push(key);
