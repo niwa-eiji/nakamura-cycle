@@ -101,15 +101,6 @@
             transform-origin: center center;
         }
 
-        /* ── ヒーロー画像（1枚固定・アニメなし） ── */
-        .hero-img-fixed {
-            position: absolute; inset: 0;
-            width: 100%; height: 100%;
-            object-fit: cover;
-            animation: none !important;
-            transform: none !important;
-            -webkit-transform: none !important;
-        }
 
         @keyframes fadeIn {
             from { opacity: 0; transform: translateY(-10px); }
@@ -165,8 +156,8 @@
     <section>
 
         <!-- ▼ スマホ専用：フルブリードヒーロー -->
-        <div class="md:hidden relative h-[85vh] overflow-hidden">
-            <img src="https://images.pexels.com/photos/132682/pexels-photo-132682.jpeg?auto=compress&cs=tinysrgb&w=1600&h=900&fit=crop" alt="自転車修理店内" class="hero-img-fixed">
+        <div class="md:hidden relative h-[85vh]"
+             style="background-image:url('https://images.pexels.com/photos/132682/pexels-photo-132682.jpeg?auto=compress&cs=tinysrgb&w=1200&q=85');background-size:cover;background-position:center;">
             <!-- グラデーションオーバーレイ -->
             <div class="absolute inset-0 bg-gradient-to-t from-black/85 via-black/25 to-black/10"></div>
             <!-- 上部ラベル -->
@@ -223,8 +214,8 @@
                         <i class="ph ph-caret-right ml-2 transition-transform group-hover:translate-x-1"></i>
                     </a>
                 </div>
-                <div class="hero-img w-2/3 h-[60vh] overflow-hidden rounded-sm relative">
-                    <img src="https://images.pexels.com/photos/132682/pexels-photo-132682.jpeg?auto=compress&cs=tinysrgb&w=1600&h=900&fit=crop" alt="自転車修理店内" class="hero-img-fixed">
+                <div class="hero-img w-2/3 h-[60vh] rounded-sm"
+                     style="background-image:url('https://images.pexels.com/photos/132682/pexels-photo-132682.jpeg?auto=compress&cs=tinysrgb&w=1600&q=90');background-size:cover;background-position:center;">
                 </div>
             </div>
         </div>
