@@ -101,17 +101,14 @@
             transform-origin: center center;
         }
 
-        /* ── ヒーロー画像（1枚固定） ── */
+        /* ── ヒーロー画像（1枚固定・アニメなし） ── */
         .hero-img-fixed {
             position: absolute; inset: 0;
             width: 100%; height: 100%;
             object-fit: cover;
-            /* GPU描画を強制：スマホスクロールのガタつき解消 */
-            transform: translateZ(0);
-            -webkit-transform: translateZ(0);
-            will-change: transform;
-            backface-visibility: hidden;
-            -webkit-backface-visibility: hidden;
+            animation: none !important;
+            transform: none !important;
+            -webkit-transform: none !important;
         }
 
         @keyframes fadeIn {
@@ -227,7 +224,7 @@
                     </a>
                 </div>
                 <div class="hero-img w-2/3 h-[60vh] overflow-hidden rounded-sm relative">
-                    <img src="https://images.pexels.com/photos/132682/pexels-photo-132682.jpeg?auto=compress&cs=tinysrgb&w=1600&h=900&fit=crop" alt="自転車修理店内" class="hero-img-fixed kenburns-img">
+                    <img src="https://images.pexels.com/photos/132682/pexels-photo-132682.jpeg?auto=compress&cs=tinysrgb&w=1600&h=900&fit=crop" alt="自転車修理店内" class="hero-img-fixed">
                 </div>
             </div>
         </div>
