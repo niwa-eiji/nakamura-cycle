@@ -777,8 +777,7 @@
                 const data = await res.json();
                 (data.contents || []).forEach(item => {
                     const key  = toKey(item.date);
-                    const type = (item.種類 || '').trim();
-                    console.log('[Calendar]', item.date, '->', key, '種類:', JSON.stringify(type));
+                    const type = (item.type || '').trim();
                     if (type === '特別営業日' || type === '特別営業') {
                         specialOpenDates.push(key);
                     } else {
