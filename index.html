@@ -91,20 +91,33 @@
         }
         .nav-underline:hover::after { width: 100%; }
 
-        /* ── ヒーロー：Androidスクロール対策 ── */
-        .hero-bg {
-            -webkit-transform: translateZ(0);
-            transform: translateZ(0);
-            will-change: auto;
-            overscroll-behavior: none;
-            -webkit-backface-visibility: hidden;
-            backface-visibility: hidden;
-        }
-
-
         @keyframes fadeIn {
             from { opacity: 0; transform: translateY(-10px); }
             to   { opacity: 1; transform: translateY(0); }
+        }
+
+        /* ── スマホ：全アニメ・トランジション無効（Androidカクつき対策） ── */
+        @media (max-width: 767px) {
+            .reveal {
+                opacity: 1 !important;
+                transform: none !important;
+                transition: none !important;
+            }
+            .hero-text, .hero-text-2, .hero-text-3, .hero-img {
+                animation: none !important;
+                opacity: 1 !important;
+                transform: none !important;
+            }
+            .card-lift {
+                transition: none !important;
+                transform: none !important;
+            }
+            .icon-pop {
+                transition: none !important;
+            }
+            details[open] summary ~ * {
+                animation: none !important;
+            }
         }
     </style>
 </head>
