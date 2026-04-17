@@ -776,9 +776,14 @@
                 const res  = await fetch('https://nakamuracycle.microcms.io/api/v1/calendar?limit=100', { headers });
                 const data = await res.json();
                 (data.contents || []).forEach(item => {
-                    const key = toKey(item.date);
-                    if (item.種類 === '特別営業日') specialOpenDates.push(key);
-                    else holidayDates.push(key);
+                    const key  = toKey(item.date);
+                    const type = (item.種類 || '').trim();
+                    console.log('[Calendar]', item.date, '->', key, '種類:', JSON.stringify(type));
+                    if (type === '特別営業日' || type === '特別営業') {
+                        specialOpenDates.push(key);
+                    } else {
+                        holidayDates.push(key);
+                    }
                 });
             } catch(e) { console.log('カレンダー取得エラー', e); }
 
