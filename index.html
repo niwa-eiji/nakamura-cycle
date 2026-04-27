@@ -574,8 +574,8 @@
         document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
 
         // microCMS お知らせ取得
-        fetch('https://nakamuracycle.microcms.io/api/v1/news', {
-            headers: { 'X-MICROCMS-API-KEY': 'MMqt6flZ3zpi1NXBPXH1x8nQxiXjnAcYnfVf' }
+        fetch('https://tz5fxdvfug.microcms.io/api/v1/news', {
+            headers: { 'X-MICROCMS-API-KEY': 'siWGY4BJO0SY7TJKOIEJU3gjPMQnveMcwbSG' }
         })
         .then(res => res.json())
         .then(data => {
@@ -618,8 +618,8 @@
         });
 
         // ラインナップ取得
-        fetch('https://nakamuracycle.microcms.io/api/v1/lineup?limit=100', {
-            headers: { 'X-MICROCMS-API-KEY': 'MMqt6flZ3zpi1NXBPXH1x8nQxiXjnAcYnfVf' }
+        fetch('https://tz5fxdvfug.microcms.io/api/v1/lineup?limit=100', {
+            headers: { 'X-MICROCMS-API-KEY': 'siWGY4BJO0SY7TJKOIEJU3gjPMQnveMcwbSG' }
         })
         .then(res => res.json())
         .then(data => {
@@ -689,7 +689,7 @@
             let viewMonth = todayM;
 
             // microCMSからデータを一度だけ取得
-            const headers = { 'X-MICROCMS-API-KEY': 'MMqt6flZ3zpi1NXBPXH1x8nQxiXjnAcYnfVf' };
+            const headers = { 'X-MICROCMS-API-KEY': 'siWGY4BJO0SY7TJKOIEJU3gjPMQnveMcwbSG' };
             let holidayDates     = [];
             let specialOpenDates = [];
             const toKey = d => {
@@ -697,7 +697,7 @@
                 return `${dt.getFullYear()}-${dt.getMonth()}-${dt.getDate()}`;
             };
             try {
-                const res  = await fetch('https://nakamuracycle.microcms.io/api/v1/calendar?limit=100', { headers });
+                const res  = await fetch('https://tz5fxdvfug.microcms.io/api/v1/calendar?limit=100', { headers });
                 const data = await res.json();
                 (data.contents || []).forEach(item => {
                     const key  = toKey(item.date);
